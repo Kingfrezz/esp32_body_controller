@@ -224,6 +224,7 @@ void handleCommand(const String& cmd) {
             break;
 
         case 'F':
+            // Direct relay override; fanSpeed keeps the last requested 0-5 speed value.
             applyFanRelayState(value);
             Serial.print("Fan relay: "); Serial.println(fanRelayState);
             break;
