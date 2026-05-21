@@ -57,6 +57,25 @@ const int JOY_THRESHOLD_MAX = 2800;
 WiFiClient client;
 unsigned long lastClientCheck = 0;
 
+void applyFanRelayState(int relayState) {
+    fanRelayState = constrain(relayState, 0, 2);
+
+    switch (fanRelayState) {
+        case 0:
+            digitalWrite(PIN_FAN1, LOW);
+            digitalWrite(PIN_FAN2, LOW);
+            break;
+        case 1:
+            digitalWrite(PIN_FAN1, HIGH);
+            digitalWrite(PIN_FAN2, LOW);
+            break;
+        case 2:
+            digitalWrite(PIN_FAN1, HIGH);
+            digitalWrite(PIN_FAN2, HIGH);
+            break;
+    }
+}
+
 void setup() {
     Serial.begin(115200);
     delay(1000);
@@ -158,6 +177,7 @@ void handleCommand(const String& cmd) {
 
         case 'S':
             fanSpeed = constrain(value, 0, 5);
+            applyFanRelayState(fanSpeed == 0 ? 0 : (fanSpeed == 1 ? 1 : 2));
             Serial.print("Fan speed: "); Serial.println(fanSpeed);
             break;
 
@@ -197,21 +217,7 @@ void handleCommand(const String& cmd) {
             break;
 
         case 'F':
-            fanRelayState = constrain(value, 0, 2);
-            switch (fanRelayState) {
-                case 0:
-                    digitalWrite(PIN_FAN1, LOW);
-                    digitalWrite(PIN_FAN2, LOW);
-                    break;
-                case 1:
-                    digitalWrite(PIN_FAN1, HIGH);
-                    digitalWrite(PIN_FAN2, LOW);
-                    break;
-                case 2:
-                    digitalWrite(PIN_FAN1, HIGH);
-                    digitalWrite(PIN_FAN2, HIGH);
-                    break;
-            }
+            applyFanRelayState(value);
             Serial.print("Fan relay: "); Serial.println(fanRelayState);
             break;
 
