@@ -76,6 +76,12 @@ void applyFanRelayState(int relayState) {
     }
 }
 
+int relayStateForFanSpeed(int speed) {
+    if (speed <= 0) return 0;
+    if (speed == 1) return 1;
+    return 2;
+}
+
 void setup() {
     Serial.begin(115200);
     delay(1000);
@@ -177,7 +183,7 @@ void handleCommand(const String& cmd) {
 
         case 'S':
             fanSpeed = constrain(value, 0, 5);
-            applyFanRelayState(fanSpeed == 0 ? 0 : (fanSpeed == 1 ? 1 : 2));
+            applyFanRelayState(relayStateForFanSpeed(fanSpeed));
             Serial.print("Fan speed: "); Serial.println(fanSpeed);
             break;
 
