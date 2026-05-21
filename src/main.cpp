@@ -77,6 +77,7 @@ void applyFanRelayState(int relayState) {
 }
 
 int relayStateForFanSpeed(int speed) {
+    // This controller only has two fan relays, so speeds 2-5 all use both relays.
     if (speed <= 0) return 0;
     if (speed == 1) return 1;
     return 2;
